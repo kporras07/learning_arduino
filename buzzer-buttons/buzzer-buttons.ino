@@ -27,6 +27,8 @@ int ledBlue = 3;
 
 int receiver = 9;
 
+char inputByte;
+
 IRrecv irrecv(receiver);    // create instance of 'irrecv'
 decode_results results;     // create instance of 'decode_results'
 
@@ -231,7 +233,6 @@ void loop() {
   }
   if (digitalRead(buttonCpin) == LOW)
   {
-    Serial.println("Play bohemian");
     playBohemianRhapsody();
   }
   if (irrecv.decode(&results)) // have we received an IR signal?
@@ -248,18 +249,19 @@ void loop() {
     }
     irrecv.resume();
   }
-  /*if (digitalRead(buttonCpin) == LOW)
-  {
-    Serial.println("CHANGE TEMPO");
-    if (currentTempo == 9) {
-      currentTempo = 0;
+
+  if (Serial.available() > 0) {
+    inputByte= Serial.read();
+    if (inputByte == 'Z') {
+      playBohemianRhapsody();
     }
-    else {
-      currentTempo += 1;
+    if (inputByte == 'Y') {
+      playHappyBirthday();
     }
-    tempo = tempoValues[currentTempo];
-    Serial.println(tempo);
-  }*/
+    if (inputByte == 'W') {
+      playPollitos();
+    }
+  }
    
   // restart after two seconds 
   delay(500);
